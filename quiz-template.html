@@ -1,148 +1,188 @@
+<!DOCTYPE html>
+
+<!--
+Copyright 2015 sincerelypeggy
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
 <html>
+  <head> 
+    <title>Quiz Title</title>
+    <!-- This quiz is meant to be used for personality tests but can be adapted to suit other quiz needs. --> 
 
-<head> 
-<title> Quiz Title </title>
-<!-- This quiz is meant to be used for personality tests but can be adapted to suit other quiz needs. --> 
+    <meta charset="utf-8">
 
-<style>
-.questions{
-	font:bold 14px Arial;
-}
+    <style>
+      body {
+        background-color: #FFFFFF;
+        font-family: sans-serif;
+      }
 
-.answers{
-	font:normal 12px Arial;
-}
+      #result {
+        display: none;
+        text-align: center;
+      }
 
-</style>
+      #result-category {
+        font-size: larger;
+      }
 
-<script>
-/* Global variables*/
-var totalQuestions = 3;
-var totalChoices = 3;
+      fieldset.question {
+        border-width: 0;
+      }
 
-/* Different choice point totals */
-var xTotal = 0;
-var yTotal = 0; 
-var zTotal = 0;
+      /* Question headers */
+      fieldset.question legend {
+        font-weight: bold;
+        font-size: larger;
+      }
+    </style>
 
-/* Different choice attributes */
-var categoryName;
-var description;
+    <script>
+      /* Global variables*/
+      var totalQuestions = 3;
+      var totalChoices = 3;
 
-/* Hides the quiz page */
-function hideHome(){
-	var div = document.getElementById('home');
-	div.style.visibility = "hidden";
-	div.style.display = "none";
-}	
+      /* Different choice point totals */
+      var xTotal = 0;
+      var yTotal = 0; 
+      var zTotal = 0;
 
-/* Calculates which category a user fits in */
-function grade(){
-	for(var q=1; q<=totalQuestions;q++){ // all the questions 
-		var currentQuestionName = "question" + q;
-        var currentQuestions = document.getElementsByName(currentQuestionName);
-        for (var c = 0; c < currentQuestions.length; c++) {
-            var radio = currentQuestions[c];
-			if(radio.checked != true){
-                continue;
+      /* Different choice attributes */
+      var categoryName;
+      var categoryDescription;
+
+      /* Hides the quiz page */
+      function hideMain() {
+        document.getElementById("quiz-main").style.display = "none";
+      }	
+
+      /* Calculates which category a user fits in */
+      function grade() {
+        for(var q = 1; q <= totalQuestions; q++) { // all the questions 
+          var currentQuestionName = "question" + q;
+          var currentQuestions = document.getElementsByName(currentQuestionName);
+
+          for (var c = 0; c < currentQuestions.length; c++) {
+            var option = currentQuestions[c];
+            if (!option.checked) {
+              continue;
             }
-            console.log(radio.value);
-            if(radio.value == "x"){ // category x
-                xTotal += 1;
-            } else if(radio.value == "y"){ // category y
-                yTotal += 1;
-            } else if (radio.value == "z"){ // category z
-                zTotal += 1;
+            // console.log(option.value);
+
+            switch (option.value) {
+              case "x": // category x
+                xTotal++;
+                break;
+              case "y": // category y
+                yTotal++;
+                break;
+              case "z": //category z
+                zTotal++;
+                break;
             }
-		}
-	}
-}
+          }
+        }
+      }
 
-/* Generates the text to appear in the results */
-function generateCategory(){
-	if(xTotal > yTotal && xTotal > zTotal){ // category x
-		categoryName = "X";
-		description = "Supplementary information for x :3"
-	} else if (yTotal > xTotal && yTotal > zTotal){ // category y
-		categoryName = "Y";
-		description = "Supplementary information for y :3"
-	} else if (zTotal > xTotal && zTotal > yTotal){ // catgory z
-		categoryName = "Z";
-		description = "Supplementary information for z :3"
-	} else { // if ties are possible or if no questions are answered
-		categoryName = "Any"
-		description = "Hm maybe you should retake the quiz? :3"	
-	}
-}
+      /* Generates the text to appear in the results */
+      function generateCategory() {
+        switch (Math.max(xTotal, yTotal, zTotal)) {
+          case xTotal: // category x
+            categoryName = "X";
+            categoryDescription = "Supplementary information for x :3";
+            break;
+          case yTotal: // category y
+            categoryName = "Y";
+            categoryDescription = "Supplementary information for y :3";
+            break;
+          case zTotal: // category z
+            categoryName = "Z";
+            categoryDescription = "Supplementary information for z :3";
+            break;
+          default: // if ties are possible or if no questions are answered
+            categoryName = "Any";
+            categoryDescription = "Hm maybe you should retake the quiz? :3";	
+        }
+      }
 
-/* TODO: 
-- Check whether the user answered all questions.
-- Create a button to reset the quiz. 
-*/
-function displayResult(){
-	grade();
-	generateCategory();
-	hideHome();
-	document.write("<font face = 'Arial'><center>Congratulations! You are in the </font>" + "<br><font size = '14px'>" + categoryName + "</font><br>" + "<font face = 'Arial'>category!" + "<br>" + description + "</center></font>");
-}
-</script>
+      /* TODO: 
+         - Check whether the user answered all questions
+           for browsers that don't support the "required" attribute.
+       */
+      function displayResult() {
+        grade();
+        generateCategory();
+        hideMain();
 
-<body bgcolor="#FFFFFF">
+        // fill in fields
+        document.getElementById("result-category").innerHTML = categoryName;
+        document.getElementById("result-description").innerHTML = categoryDescription;
 
-<!-- Home -->
-<div id = "home">
+        // display result
+        document.getElementById("result").style.display = "block";
+      }
+  </script>
+</head>
 
-<!-- Form -->
-<form method="POST" name="quiz">
+<body>
 
-<p><font face="Arial"><big><big>Quiz Title</big></big></font></p>
+  <!-- Main -->
+  <div id="quiz-main">
 
-<!-- Questions. NOTE: To avoid ties, choose 4, 7, 10, etc. questions -->
-<div class="questions">
-Question #1
-</div>
+    <h1>Quiz Title</h1>
 
-<div class="answers">
-<input type ="radio" value ="x" name="question1"> a) Description <br>
-<input type ="radio" value ="y" name="question1"> b) Description <br>
-<input type ="radio" value ="z" name="question1"> c) Description <br>
+    <!-- Form -->
+    <form id="quiz" onsubmit="displayResult(); return false;">
+      <!-- Questions. NOTE: To avoid ties, choose 4, 7, 10, etc. questions
+           Remove the "required" attribute to make a question optional -->
 
-</div>
+      <fieldset class="question">
+        <legend>Question #1</legend>
+        <label><input type="radio" value="x" name="question1" required> a) Description</label><br>
+        <label><input type="radio" value="y" name="question1"> b) Description</label><br>
+        <label><input type="radio" value="z" name="question1"> c) Description</label><br>
+      </fieldset>
 
-<br>
+      <fieldset class="question">
+        <legend>Question #2</legend>
+        <label><input type="radio" value="x" name="question2" required> a) Description</label><br>
+        <label><input type="radio" value="y" name="question2"> b) Description</label><br>
+        <label><input type="radio" value="z" name="question2"> c) Description</label><br>
+      </fieldset>
 
-<div class="questions">
-Question #2
-</div>
+      <fieldset class="question">
+        <legend>Question #3</legend>
+        <label><input type="radio" value="x" name="question3" required> a) Description</label><br>
+        <label><input type="radio" value="y" name="question3"> b) Description</label><br>
+        <label><input type="radio" value="z" name="question3"> c) Description</label><br>
+      </fieldset>
 
-<div class="answers">
-<input type ="radio" value ="x" name="question2"> a) Description <br> 
-<input type ="radio" value ="y" name="question2"> b) Description <br>
-<input type ="radio" value ="z" name="question2"> c) Description <br>
-</div>
+      <!-- Submit button -->
+      <input type="submit" value="Submit!" name="submit">
+      <input type="reset" value="Reset" name="reset">
+    </form>
 
-<br>
+  </div>
 
-<div class="questions"">
-Question #3
-</div>
-
-<div class="answers">
-<input type ="radio" value ="x" name="question3"> a) Description <br>
-<input type ="radio" value ="y" name="question3"> b) Description <br>
-<input type ="radio" value ="z" name="question3"> c) Description <br> 
-</div>
-
-<br>
-
-</form>
-
-<!-- Submit button -->
-<form>
-<input type = "button" value="Submit!" name ="submit" onClick="displayResult()">
-</form>
-
-</div> 
+  <!-- Result -->
+  <div id="result">
+    <div>
+      Congratulations! You are in the <span id="result-category"></span> category!
+    </div>
+    <div id="result-description"></div>
+  </div>
 
 </body>
 </html>
