@@ -1,0 +1,148 @@
+<html>
+
+<head> 
+<title> Quiz Title </title>
+<!-- This quiz is meant to be used for personality tests but can be adapted to suit other quiz needs. --> 
+
+<style>
+.questions{
+	font:bold 14px Arial;
+}
+
+.answers{
+	font:normal 12px Arial;
+}
+
+</style>
+
+<script>
+/* Global variables*/
+var totalQuestions = 3;
+var totalChoices = 3;
+
+/* Different choice point totals */
+var xTotal = 0;
+var yTotal = 0; 
+var zTotal = 0;
+
+/* Different choice attributes */
+var categoryName;
+var description;
+
+/* Hides the quiz page */
+function hideHome(){
+	var div = document.getElementById('home');
+	div.style.visibility = "hidden";
+	div.style.display = "none";
+}	
+
+/* Calculates which category a user fits in */
+function grade(){
+	for(var q=1; q<=totalQuestions;q++){ // all the questions 
+		var currentQuestionName = "question" + q;
+        var currentQuestions = document.getElementsByName(currentQuestionName);
+        for (var c = 0; c < currentQuestions.length; c++) {
+            var radio = currentQuestions[c];
+			if(radio.checked != true){
+                continue;
+            }
+            console.log(radio.value);
+            if(radio.value == "x"){ // category x
+                xTotal += 1;
+            } else if(radio.value == "y"){ // category y
+                yTotal += 1;
+            } else if (radio.value == "z"){ // category z
+                zTotal += 1;
+            }
+		}
+	}
+}
+
+/* Generates the text to appear in the results */
+function generateCategory(){
+	if(xTotal > yTotal && xTotal > zTotal){ // category x
+		categoryName = "X";
+		description = "Supplementary information for x :3"
+	} else if (yTotal > xTotal && yTotal > zTotal){ // category y
+		categoryName = "Y";
+		description = "Supplementary information for y :3"
+	} else if (zTotal > xTotal && zTotal > yTotal){ // catgory z
+		categoryName = "Z";
+		description = "Supplementary information for z :3"
+	} else { // if ties are possible or if no questions are answered
+		categoryName = "Any"
+		description = "Hm maybe you should retake the quiz? :3"	
+	}
+}
+
+/* TODO: 
+- Check whether the user answered all questions.
+- Create a button to reset the quiz. 
+*/
+function displayResult(){
+	grade();
+	generateCategory();
+	hideHome();
+	document.write("<font face = 'Arial'><center>Congratulations! You are in the </font>" + "<br><font size = '14px'>" + categoryName + "</font><br>" + "<font face = 'Arial'>category!" + "<br>" + description + "</center></font>");
+}
+</script>
+
+<body bgcolor="#FFFFFF">
+
+<!-- Home -->
+<div id = "home">
+
+<!-- Form -->
+<form method="POST" name="quiz">
+
+<p><font face="Arial"><big><big>Quiz Title</big></big></font></p>
+
+<!-- Questions. NOTE: To avoid ties, choose 4, 7, 10, etc. questions -->
+<div class="questions">
+Question #1
+</div>
+
+<div class="answers">
+<input type ="radio" value ="x" name="question1"> a) Description <br>
+<input type ="radio" value ="y" name="question1"> b) Description <br>
+<input type ="radio" value ="z" name="question1"> c) Description <br>
+
+</div>
+
+<br>
+
+<div class="questions">
+Question #2
+</div>
+
+<div class="answers">
+<input type ="radio" value ="x" name="question2"> a) Description <br> 
+<input type ="radio" value ="y" name="question2"> b) Description <br>
+<input type ="radio" value ="z" name="question2"> c) Description <br>
+</div>
+
+<br>
+
+<div class="questions"">
+Question #3
+</div>
+
+<div class="answers">
+<input type ="radio" value ="x" name="question3"> a) Description <br>
+<input type ="radio" value ="y" name="question3"> b) Description <br>
+<input type ="radio" value ="z" name="question3"> c) Description <br> 
+</div>
+
+<br>
+
+</form>
+
+<!-- Submit button -->
+<form>
+<input type = "button" value="Submit!" name ="submit" onClick="displayResult()">
+</form>
+
+</div> 
+
+</body>
+</html>
