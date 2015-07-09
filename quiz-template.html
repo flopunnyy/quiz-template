@@ -99,22 +99,18 @@ limitations under the License.
 
       /* Generates the text to appear in the results */
       function generateCategory() {
-        switch (Math.max(xTotal, yTotal, zTotal)) {
-          case xTotal: // category x
-            categoryName = "X";
-            categoryDescription = "Supplementary information for x :3";
-            break;
-          case yTotal: // category y
-            categoryName = "Y";
-            categoryDescription = "Supplementary information for y :3";
-            break;
-          case zTotal: // category z
-            categoryName = "Z";
-            categoryDescription = "Supplementary information for z :3";
-            break;
-          default: // if ties are possible or if no questions are answered
-            categoryName = "Any";
-            categoryDescription = "Hm maybe you should retake the quiz? :3";	
+        if (xTotal > Math.max(yTotal, zTotal)) { // category x
+          categoryName = "X";
+          categoryDescription = "Supplementary information for x :3";
+        } else if (yTotal > Math.max(xTotal, zTotal)) { // category y
+          categoryName = "Y";
+          categoryDescription = "Supplementary information for y :3";
+        } else if (zTotal > Math.max(xTotal, yTotal)) { // catgory z
+          categoryName = "Z";
+          categoryDescription = "Supplementary information for z :3";
+        } else { // if ties are possible or if no questions are answered
+          categoryName = "Any";
+          categoryDescription = "Hm maybe you should retake the quiz? :3";
         }
       }
 
