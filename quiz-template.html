@@ -17,9 +17,9 @@ limitations under the License.
 -->
 
 <html>
-  <head> 
+  <head>
     <title>Quiz Title</title>
-    <!-- This quiz is meant to be used for personality tests but can be adapted to suit other quiz needs. --> 
+    <!-- This quiz is meant to be used for personality tests but can be adapted to suit other quiz needs. -->
 
     <meta charset="utf-8">
 
@@ -57,7 +57,7 @@ limitations under the License.
 
       /* Different choice point totals */
       var xTotal = 0;
-      var yTotal = 0; 
+      var yTotal = 0;
       var zTotal = 0;
 
       /* Different choice attributes */
@@ -67,11 +67,11 @@ limitations under the License.
       /* Hides the quiz page */
       function hideMain() {
         document.getElementById("quiz-main").style.display = "none";
-      }	
+      }
 
       /* Calculates which category a user fits in */
       function grade() {
-        for (var q = 1; q <= totalQuestions; q++) { // all the questions 
+        for (var q = 1; q <= totalQuestions; q++) { // all the questions
           var currentQuestionName = "question" + q;
           var currentQuestions = document.getElementsByName(currentQuestionName);
 
@@ -114,7 +114,7 @@ limitations under the License.
         }
       }
 
-      /* TODO: 
+      /* TODO:
          - Check whether the user answered all questions
            for browsers that don't support the "required" attribute.
        */
